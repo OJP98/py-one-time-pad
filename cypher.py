@@ -21,5 +21,9 @@ def BitarrayToString(bits: bitarray) -> list:
     return ba.tobytes().decode('utf-8')
 
 
-def ApplyPadToBits(bits: bitarray, pad: bitarray):
+def BinaryToBitarray(string: str) -> bitarray:
+    return bitarray(string)
+
+
+def ApplyPadToBits(bits: bitarray, pad: bitarray) -> bitarray:
     return bitarray([b ^ p for b, p in zip(bits, pad)])

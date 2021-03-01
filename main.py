@@ -1,12 +1,12 @@
 import sys
 import getopt
-# from cypher import *
-# from utils import *
+from cypher import *
+from utils import *
 
 HELP_MSG = '''
 To cypher a message:
-> python main.py -c -i <msgfile>
-> python main.py --cypher --inputfile <msgfile>
+> python main.py -c
+> python main.py --cypher
 
 
 To decypher a message:
@@ -21,8 +21,8 @@ def main(argv):
     key_file = False
 
     try:
-        opts, args = getopt.getopt(
-            argv, 'hi:k:dc', ['inputfile=', 'keyfile=', 'decypher', 'cypher'])
+        opts, _ = getopt.getopt(
+            argv, 'hi:k:dc:', ['inputfile=', 'keyfile=', 'decypher', 'cypher'])
     except getopt.GetoptError:
         print(HELP_MSG)
         sys.exit(2)
@@ -40,16 +40,48 @@ def main(argv):
         elif opt in ('-d', '--decypher'):
             cypher = False
 
-    if not input_file:
-        print('Missing file input!')
-        print(HELP_MSG)
-        sys.exit()
-    elif not cypher and not key_file:
-        print('Missing key input!')
-        print(HELP_MSG)
-        sys.exit()
+    if not cypher:
+        if not input_file or not key_file:
+            print('Missing file input!')
+            print(HELP_MSG)
+            sys.exit()
 
     return cypher, input_file, key_file
+
+
+def CypherMessage(message: str):
+    ba = StringToBitarray(message)
+    key = GenerateRandomKey(len(ba))
+
+    cyphered = ApplyPadToBits(ba, key)
+    binary_cyphered = BitarrayToBinary(cyphered)
+    key_str = ''.join(str(i) for i in key)
+
+    print(f'''
+        Message: {message}
+        Generated key:
+            {key_str}
+        Encrypted message:
+            {binary_cyphered}
+        ''')
+
+    cyphered_filename = WriteToFile('cyphered.txt', binary_cyphered)
+    print(cyphered_filename)
+    key_filename = WriteToFile('key.txt', key_str)
+    print(key_filename)
+
+
+def DecypherMessage(message: str, key: str):
+    c_msg_ba = BinaryToBitarray(message)
+    key_ba = BinaryToBitarray(key)
+
+    msg_ba = ApplyPadToBits(c_msg_ba, key_ba)
+    msg = BitarrayToString(msg_ba)
+
+    print(f'''
+        The message is the following:
+        "{msg}"
+        ''')
 
 
 if __name__ == "__main__":
@@ -57,6 +89,12 @@ if __name__ == "__main__":
 
     if cypher:
         print('Cypher!')
-        print(inp)
+        message = input('Enter a message to cypher: ')
+        CypherMessage(message)
+        sys.exit(1)
     else:
         print('Decypher!')
+        cyphered_msg = GetFileContent(inp)
+        key = GetFileContent(key)
+        DecypherMessage(cyphered_msg, key)
+        sys.exit(1)
