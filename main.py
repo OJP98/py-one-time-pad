@@ -59,7 +59,7 @@ def CypherMessage(message: str):
 
     print(f'''
         Message: {message}
-        Generated key:
+        Generated pad:
             {key_str}
         Encrypted message:
             {binary_cyphered}
@@ -79,8 +79,12 @@ def DecypherMessage(message: str, key: str):
     msg = BitarrayToString(msg_ba)
 
     print(f'''
-        The message is the following:
-        "{msg}"
+        Encrypted message:
+            {message}
+        Pad used:
+            {key}
+        The decyphered message is the following:
+            "{msg}"
         ''')
 
 
