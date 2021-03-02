@@ -22,7 +22,7 @@ def main(argv):
 
     try:
         opts, _ = getopt.getopt(
-            argv, 'hi:k:dc:', ['inputfile=', 'keyfile=', 'decypher', 'cypher'])
+            argv, 'hi:k:dc', ['inputfile=', 'keyfile=', 'decypher', 'cypher'])
     except getopt.GetoptError:
         print(HELP_MSG)
         sys.exit(2)
