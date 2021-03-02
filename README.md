@@ -9,7 +9,7 @@ Simple one-time pad encryption made with python 3. This program uses **bitarray*
 
 ## Installation
 
-User the package manager **pip** to install the requirements:
+Use the package manager **pip** to install the requirements:
 
 ```
 pip install -r requirements.txt
